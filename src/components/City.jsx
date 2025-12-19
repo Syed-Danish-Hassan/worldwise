@@ -18,7 +18,7 @@ const formatDate = (date) =>
 
 function City() {
   const id = useParams();
-  console.log(id);
+  console.log("city id is " + id["id"]);
   const { currentCity, getCity, isLoading } = useCities();
 
   // const [searchParams, setSearchParams] = useSearchParams();
@@ -33,8 +33,9 @@ function City() {
   );
   // if (!currentCity) {
   //   return <div>Loading...</div>;
-  console.log(currentCity);
+  console.log("city object is " + currentCity.id);
   const { cityName, emoji, date, notes } = currentCity;
+  console.log("city name is " + cityName);
   if (isLoading) {
     return <Spinner />;
   }
