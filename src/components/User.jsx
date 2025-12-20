@@ -1,4 +1,10 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable react/prop-types */
 import styles from "./User.module.css";
+
+import { useAuth } from "../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
+//import { useEffect } from "react";
 
 const FAKE_USER = {
   name: "Jack",
@@ -8,9 +14,17 @@ const FAKE_USER = {
 };
 
 function User() {
-  const user = FAKE_USER;
-
-  function handleClick() {}
+  //const user = FAKE_USER;
+  const { user, isAuthenticated, logout } = useAuth();
+  const navigate = useNavigate();
+  console.log("user -> ", user);
+  //console.log("user in ", user.name, user.avatar);
+  function handleClick() {
+    if (isAuthenticated) {
+      logout();
+      navigate("/");
+    }
+  }
 
   return (
     <div className={styles.user}>
