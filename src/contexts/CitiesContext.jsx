@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import { createContext, useReducer } from "react";
-import { useEffect, useState, useContext } from "react";
+import { useCallback, useEffect, useState, useContext } from "react";
 
 const BASE_URL = "http://localhost:8000";
 
@@ -64,35 +64,38 @@ function CitiesProvider({ children }) {
     fetchCities();
   }, []);
 
-  async function getCity(id) {
-    try {
-      console.log("ID play ", id, currentCity.id);
-      if (id === currentCity.id) return;
-      //setIsLoading(true);
-      dispatch({ type: "loading" });
-      console.log("Fetching city with id:", id);
-      const response = await fetch(`${BASE_URL}/cities/${id["id"]}`);
-      // console.log(
-      //   " url " +
-      //     JSON.stringify(response.json()) +
-      //     " " +
-      //     `${BASE_URL}/cities/${id["id"]}`
-      // );
-      const data = await response.json();
-      console.log("2 -Fetched city data:", data);
-      //setCurrentCity(data);
-      dispatch({ type: "city/loaded", payload: data });
-    } catch (error) {
-      //console.error("Error fetching cities:", error);
-      //alert("1- Error loading Data...");
-      dispatch({
-        type: "rejected",
-        payload: "2- Error loading the city data...",
-      });
-    }
+  const getCity = useCallback(
+    async function getCity(id) {
+      try {
+        console.log("ID play ", id, currentCity.id);
+        if (id === currentCity.id) return;
+        //setIsLoading(true);
+        dispatch({ type: "loading" });
+        console.log("Fetching city with id:", id);
+        const response = await fetch(`${BASE_URL}/cities/${id["id"]}`);
+        // console.log(
+        //   " url " +
+        //     JSON.stringify(response.json()) +
+        //     " " +
+        //     `${BASE_URL}/cities/${id["id"]}`
+        // );
+        const data = await response.json();
+        console.log("2 -Fetched city data:", data);
+        //setCurrentCity(data);
+        dispatch({ type: "city/loaded", payload: data });
+      } catch (error) {
+        //console.error("Error fetching cities:", error);
+        //alert("1- Error loading Data...");
+        dispatch({
+          type: "rejected",
+          payload: "2- Error loading the city data...",
+        });
+      }
 
-    //return cities.find((city) => city.id === Number(id));
-  }
+      //return cities.find((city) => city.id === Number(id));
+    },
+    [currentCity.id]
+  );
 
   async function createCity(newCity) {
     try {
